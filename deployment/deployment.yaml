@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: jnp2
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: jnp2
+      component: frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jnp2
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: rzetelskik/jnp2-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: frontend
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
