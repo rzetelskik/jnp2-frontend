@@ -22,7 +22,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-              name: frontend
+              name: http
           lifecycle:
             preStop:
               exec:
