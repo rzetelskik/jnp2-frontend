@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel, RegistrationModel } from '../models/user'
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment'
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,7 +15,7 @@ const httpOptions = {
 })
 export class AuthService {
   public authenticated: boolean = false;
-  serviceUrl: string = 'http://localhost:3001';
+  serviceUrl: string = environment.accountsUrl;
 
   constructor(private http: HttpClient) { }
 
