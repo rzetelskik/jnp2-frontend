@@ -15,6 +15,9 @@ export class NavbarComponent implements OnInit {
   loginModel: LoginModel = new LoginModel();
   registrationModel: RegistrationModel = new RegistrationModel();
 
+  loginError: string = null;
+  registerError: string = null;
+
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -40,8 +43,7 @@ export class NavbarComponent implements OnInit {
         window.location.reload();
       },
       error => {
-        console.log('Error while login.');
-        console.log(error);
+        this.loginError = error.error.error;
       }
     );
   }
@@ -55,8 +57,7 @@ export class NavbarComponent implements OnInit {
         window.location.reload();
       },
       error => {
-        console.log('Error while register.');
-        console.log(error);
+        this.registerError = error.error.error;
       }
     );
   }

@@ -42,4 +42,8 @@ export class AuthService {
 
     return this.http.get<any>(`${this.serviceUrl}/authorized?auth_token=${token}`, httpOptions);
   }
+
+  loggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
 }
