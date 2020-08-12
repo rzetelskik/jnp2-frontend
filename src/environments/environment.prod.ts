@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  accountsUrl: 'sdf',
-  tasksUrl: '',
-  projectsUrl: ''
+  accountsUrl: 'http://accounts',
+  tasksUrl: 'http://tasks',
+  projectsUrl: 'http://projects'
 };
