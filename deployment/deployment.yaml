@@ -16,6 +16,28 @@ spec:
         app: jnp2
         component: frontend
     spec:
+      initContainers:
+        - name: wait-for-backends
+          image: busybox:1.28
+          command: ['/bin/sh']
+          args:
+            - -c
+            - >
+              set -x;
+              until nslookup ${HOST_ACCOUNTS}; do
+                echo waiting for ${HOST_ACCOUNTS};
+                sleep 2;
+              done;
+
+              until nslookup ${HOST_PROJECTS}; do
+                echo waiting for ${HOST_PROJECTS};
+                sleep 2;
+              done;
+          envFrom:
+            - configMapRef:
+                name: accounts-config
+            - configMapRef:
+                name: projects-config
       containers:
         - name: frontend
           image: rzetelskik/jnp2-frontend:latest
