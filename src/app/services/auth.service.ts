@@ -20,19 +20,20 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(model: LoginModel): Observable<any> {
-    return this.http.post<any>(`${this.serviceUrl}/authenticate`, model, httpOptions);
+    return this.http.post<any>(`${this.serviceUrl}/accounts/authenticate`, model, httpOptions);
   }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
+  }
+
+  loggedIn(): boolean {
+    return !!localStorage.getItem('token');
   }
 
   register(model: RegistrationModel): Observable<any> {
-    return this.http.post<any>(`${this.serviceUrl}/register`, model, httpOptions);
-  }
-
-  setToken(token: string) {
-    localStorage.setItem('token', token);
+    return this.http.post<any>(`${this.serviceUrl}/accounts/register`, model, httpOptions);
   }
 
   auth(): Observable<any> {
@@ -41,10 +42,27 @@ export class AuthService {
       return null;
     }
 
-    return this.http.get<any>(`${this.serviceUrl}/authorized?auth_token=${token}`, httpOptions);
+    const headers = new HttpHeaders({
+      'Content-Type' : 'application/json',
+      'Authorization': token
+    });
+
+    return this.http.get<any>(`${this.serviceUrl}/authorize`, { headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
-  loggedIn(): boolean {
-    return !!localStorage.getItem('token');
+  setToken(token: string) {
+    localStorage.setItem('token', token);
+  }
+
+  setUsername(username: string) {
+    localStorage.setItem('username', username);
+  }
+
+  getUsername(): string {
+    return localStorage.getItem('username');
+  }
+
+  setUserId(id: number) {
+    localStorage.setItem('userID', id.toString());
   }
 }

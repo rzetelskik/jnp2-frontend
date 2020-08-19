@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginModel, RegistrationModel } from '../../models/user'
 import { consoleTestResultHandler } from 'tslint/lib/test';
+import { tap, catchError} from 'rxjs/operators'
 
 @Component({
   selector: 'app-navbar',
@@ -22,16 +23,19 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.auth()?.subscribe(
-      data => {
-        this.username = data.username;
+      resp => {
+        console.log(resp);
+        console.log(resp.headers.get('Authenticated'));
+        // this.authService.setUserId(resp.headers.get('Authenticated'))
         this.authService.authenticated = true;
+        this.username = this.authService.getUsername();
       },
       error => {
         console.log(error);
         this.authService.logout();
         this.authService.authenticated = false;
       }
-    )
+    );
   }
 
   login(event: Event) {
@@ -40,6 +44,7 @@ export class NavbarComponent implements OnInit {
     this.authService.login(this.loginModel).subscribe(
       data => {
         this.authService.setToken(data.auth_token);
+        this.authService.setUsername(this.loginModel.password);
         window.location.reload();
       },
       error => {
@@ -54,6 +59,7 @@ export class NavbarComponent implements OnInit {
     this.authService.register(this.registrationModel).subscribe(
       data => {
         this.authService.setToken(data.auth_token);
+        this.authService.setUsername(this.registrationModel.username);
         window.location.reload();
       },
       error => {
