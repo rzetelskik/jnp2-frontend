@@ -49,3 +49,10 @@ spec:
             preStop:
               exec:
                 command: ["/usr/sbin/nginx","-s","quit"]
+          envFrom:
+            - configMapRef:
+                name: accounts-config
+            - configMapRef:
+                name: projects-config
+            - configMapRef:
+                name: rabbitmq-config
