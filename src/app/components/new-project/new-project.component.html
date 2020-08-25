@@ -1,5 +1,9 @@
 <h2>Create new project</h2>
 
+<div *ngIf="error" class="alert alert-danger">
+  {{ error }}
+</div>
+
 <form (ngSubmit)="create($event)">
   <div class="form-group">
     <label for="name">Project name</label>

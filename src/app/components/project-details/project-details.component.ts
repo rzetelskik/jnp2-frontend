@@ -33,6 +33,7 @@ export class ProjectDetailsComponent implements OnInit {
   taskDes: string;
 
   lists: List[] = [];
+  errorMsg: string = null;
 
   constructor(private projectService: ProjectsService, private statusService: StatusService, private taskService: TasksService) { }
 
@@ -63,17 +64,17 @@ export class ProjectDetailsComponent implements OnInit {
                 }
               },
               error => {
-                console.error(error);
+                this.errorMsg = error.error.error;
               }
             )
           },
           error => {
-            console.error(error);
+            this.errorMsg = error.error.error;
           }
         );
       },
       error => {
-        console.error(error);
+        this.errorMsg = error.error.error;
       }
     );
   }
@@ -86,7 +87,7 @@ export class ProjectDetailsComponent implements OnInit {
         window.location.reload();
       },
       error => {
-        console.error(error);
+        this.errorMsg = error.error.error;
       }
     );
   }
@@ -97,7 +98,7 @@ export class ProjectDetailsComponent implements OnInit {
         window.location.reload();
       },
       error => {
-        console.error(error);
+        this.errorMsg = error.error.error;
       }
     );
   }
@@ -111,7 +112,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.addName = '';
       },
       error => {
-        console.error(error);
+        this.errorMsg = error.error.error;
       }
     );
   }
@@ -125,14 +126,13 @@ export class ProjectDetailsComponent implements OnInit {
         this.removeName = '';
       },
       error => {
-        console.error(error);
+        this.errorMsg = error.error.error;
       }
     );
   }
 
   selectList(listId: number) {
     this.listForNewTask = listId;
-    console.log(listId);
   }
 
   createTask(event: Event) {
@@ -143,13 +143,12 @@ export class ProjectDetailsComponent implements OnInit {
         window.location.reload();
       },
       error => {
-        console.error(error);
+        this.errorMsg = error.error.error;
       }
     )
   }
 
   showDetails(taskId: number) {
-    console.log("CLICK!")
     this.taskService.details(this.projectDetails.id, taskId).subscribe(
       data => {
         const pipe = new DatePipe('en-US');
@@ -161,7 +160,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.details.status = data.status_id;
       },
       error => {
-        console.log(error);
+        this.errorMsg = error.error.error;
       }
     )
   }
@@ -174,7 +173,7 @@ export class ProjectDetailsComponent implements OnInit {
         },
         error => {
           document.getElementById('closeButton').click();
-          console.error(error);
+          this.errorMsg = error.error.error;
         }
       )
   }
@@ -197,7 +196,7 @@ export class ProjectDetailsComponent implements OnInit {
             event.currentIndex);
         },
         error => {
-          console.error(error);
+          this.errorMsg = error.error.error;
         }
       );
     }

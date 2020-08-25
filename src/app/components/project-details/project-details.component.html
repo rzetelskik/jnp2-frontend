@@ -5,6 +5,9 @@
     </div>
 
     <div class="board-body">
+      <div *ngIf="errorMsg" class="alert alert-danger">
+        {{ errorMsg }}
+      </div>
 
       <div class="management">
         <div class="management-buttons">

@@ -9,6 +9,7 @@ import { Router } from '@angular/router'
 })
 export class NewProjectComponent implements OnInit {
   projectName: string;
+  error: string = null;
 
   constructor(private projectsService: ProjectsService, private router: Router) { }
 
@@ -23,7 +24,7 @@ export class NewProjectComponent implements OnInit {
         this.router.navigate(['/list']);
       },
       error => {
-        console.error(error);
+        this.error = error.error.error;
       }
     )
   }
