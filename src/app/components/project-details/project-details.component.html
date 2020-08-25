@@ -23,6 +23,15 @@
             aria-expanded="false" aria-controls="removeForm">
             Remove user
           </a>
+          <a class="dropdown" *ngIf="projectDetails">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="assigneesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assignees</button>
+            <div class="dropdown-menu" aria-labelledby="assigneesButton">
+              <div class="dropdown-item" *ngFor="let u of projectDetails.assignees">
+                {{ u.user }}
+                <span *ngIf="u.owner"> (Owner)</span>
+              </div>
+            </div>
+          </a>
         </div>
 
         <div class="collapse" id="addList">
@@ -75,7 +84,10 @@
             (cdkDropListDropped)="drop($event, list.id)">
             <a class="task" *ngFor="let task of list.tasks" cdkDrag (click)="showDetails(task.id)" data-toggle="modal" data-target="#detailsModal">
               <div class="task-id">{{ task.id }}</div>
-              <div class="task-name">{{ task.name }}</div>
+              <div class="task-name">
+                <span *ngIf="task.assigned" class="assigned">&#10004; </span>
+                {{ task.name }}
+              </div>
               <div class="task-description">{{ task.description }}</div>
             </a>
           </div>
@@ -148,6 +160,25 @@
           <div class="form-group">
             <label for="detailsUpdated" class="text-bold">Last modified at</label>
             <input readonly class="form-control-plaintext" id="detailsUpdated" name="detailsUpdated"[(ngModel)]="details.updated_at" >
+          </div>
+
+          <div class="task-users">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="taskDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assignees</button>
+              <div class="dropdown-menu" aria-labelledby="taskDrop">
+                <div class="dropdown-item" *ngFor="let us of details.selectedUsers">
+                  <input type="checkbox" [(ngModel)]="us.assigned">
+                  {{ us.user }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="detailsAssignees" class="text-bold">Assignees</label>
+            <ul id="detailsAssignees" name="detailsAssignees">
+              <li *ngFor="let u of details.assignees"> {{ u }}</li>
+            </ul>
           </div>
         </div>
       </div>

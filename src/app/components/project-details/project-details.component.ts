@@ -5,13 +5,26 @@ import { TasksService } from '../../services/tasks.service'
 import { List } from '../../models/list'
 import { DatePipe } from '@angular/common'
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'
-import { Task } from '../../models/task';
+import { Task, TaskUser } from '../../models/task';
+
+interface ProjectUser {
+  user: string;
+  owner: boolean;
+}
+
+function mapToUser(x): ProjectUser {
+  return {
+    user: x[0],
+    owner: x[1]
+  }
+}
 
 interface ProjectDetails {
   id: number;
   projectName: string;
   created: Date;
   updated: Date;
+  assignees: ProjectUser[];
 }
 
 @Component({
@@ -23,6 +36,8 @@ interface ProjectDetails {
 export class ProjectDetailsComponent implements OnInit {
   projectDetails: ProjectDetails;
   details: Task = new Task(0, '', '');
+  taskUser: string;
+  taskError: string = null;
   
   listName: string;
   addName: string;
@@ -43,11 +58,14 @@ export class ProjectDetailsComponent implements OnInit {
 
     this.projectService.details(id).subscribe(
       data => {
+        const assignees: ProjectUser[] = data.assignees.map(mapToUser);
+
         this.projectDetails = {
           id: data.id,
           projectName: data.name,
           created: new Date(data.created_at),
-          updated: new Date(data.updated_at)
+          updated: new Date(data.updated_at),
+          assignees
         }
 
         this.statusService.getStatuses(this.projectDetails.id).subscribe(
@@ -62,6 +80,8 @@ export class ProjectDetailsComponent implements OnInit {
                 for(let t of data) {
                     this.addTask(t);
                 }
+
+                this.checkAssigned();
               },
               error => {
                 this.errorMsg = error.error.error;
@@ -75,6 +95,25 @@ export class ProjectDetailsComponent implements OnInit {
       },
       error => {
         this.errorMsg = error.error.error;
+      }
+    );
+  }
+
+  checkAssigned() {
+    this.taskService.assigned(this.projectDetails.id).subscribe(
+      data => {
+        const ids: number[] = data.map(d => d.id);
+        
+        for(let l of this.lists) {
+          for(let t of l.tasks) {
+            if(ids.find(x => x === t.id)) {
+              t.assigned = true;
+            }
+            else {
+              t.assigned = false;
+            }
+          }
+        }
       }
     );
   }
@@ -110,6 +149,23 @@ export class ProjectDetailsComponent implements OnInit {
       data => {
         document.getElementById('addButton').click();
         this.addName = '';
+
+        this.projectService.details(this.projectDetails.id).subscribe(
+          data => {
+            const assignees: ProjectUser[] = data.assignees.map(mapToUser);
+
+            this.projectDetails = {
+              id: data.id,
+              projectName: data.name,
+              created: new Date(data.created_at),
+              updated: new Date(data.updated_at),
+              assignees
+            }
+          },
+          error => {
+            this.errorMsg = error.error.error;
+          }
+        );
       },
       error => {
         this.errorMsg = error.error.error;
@@ -124,6 +180,23 @@ export class ProjectDetailsComponent implements OnInit {
       data => {
         document.getElementById('removeButton').click();
         this.removeName = '';
+
+        this.projectService.details(this.projectDetails.id).subscribe(
+          data => {
+            const assignees: ProjectUser[] = data.assignees.map(mapToUser);
+
+            this.projectDetails = {
+              id: data.id,
+              projectName: data.name,
+              created: new Date(data.created_at),
+              updated: new Date(data.updated_at),
+              assignees
+            }
+          },
+          error => {
+            this.errorMsg = error.error.error;
+          }
+        );
       },
       error => {
         this.errorMsg = error.error.error;
@@ -158,6 +231,20 @@ export class ProjectDetailsComponent implements OnInit {
         this.details.created_at = pipe.transform(data.created_at, 'medium');
         this.details.updated_at = pipe.transform(data.updated_at, 'medium');
         this.details.status = data.status_id;
+        this.details.assignees = data.assignees;
+
+        this.details.selectedUsers = this.projectDetails.assignees.map(u => {
+          const us = new TaskUser();
+          us.user = u.user;
+          if(this.details.assignees.find(x => x === us.user)) {
+            us.assigned = true;
+          }
+          else {
+            us.assigned = false;
+          }
+          return us;
+        });
+        console.log(this.details);
       },
       error => {
         this.errorMsg = error.error.error;
@@ -166,10 +253,22 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   saveChanges() {
+    console.log(this.details.selectedUsers);
     this.taskService.update(this.projectDetails.id, this.details.id,
       this.details.name, this.details.description, this.details.status).subscribe(
         data => {
-          window.location.reload();
+          const assignees = this.details.selectedUsers.filter(x => x.assigned).map(x => x.user);
+          this.taskService.assign(this.projectDetails.id, this.details.id, assignees).subscribe(
+            data => {
+              this.showDetails(this.details.id);
+              this.taskError = null;
+              this.checkAssigned();
+            },
+            error => {
+              document.getElementById('closeButton').click();
+              this.errorMsg = error.error.error;
+            }
+          );
         },
         error => {
           document.getElementById('closeButton').click();
@@ -209,5 +308,4 @@ export class ProjectDetailsComponent implements OnInit {
       }
     }
   }
-
 }

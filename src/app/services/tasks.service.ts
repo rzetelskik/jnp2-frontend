@@ -53,4 +53,20 @@ export class TasksService {
 
     return this.http.patch<any>(`${this.serviceUrl}/projects/${projectId}/tasks/${taskId}`, model, httpOptions);
   }
+
+  assign(projectId: number, taskId: number, users: string[]): Observable<any> {
+    const httpOptions = this.auth.generateHeaders();
+
+    const model = {
+      users
+    };
+
+    return this.http.put(`${this.serviceUrl}/projects/${projectId}/tasks/${taskId}/assign`, model, httpOptions);
+  }
+
+  assigned(projectId: number): Observable<any> {
+    const httpOptions = this.auth.generateHeaders();
+
+    return this.http.get(`${this.serviceUrl}/projects/${projectId}/tasks/assigned`, httpOptions);
+  }
 }

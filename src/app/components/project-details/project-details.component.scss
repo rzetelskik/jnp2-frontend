@@ -142,3 +142,16 @@
 .text-bold {
   font-weight: bold;
 }
+
+.task-users {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.input-field-larger {
+  width: 40%;
+}
+
+.assigned {
+  color: green;
+}
