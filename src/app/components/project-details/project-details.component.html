@@ -86,7 +86,7 @@
               <div class="task-id">{{ task.id }}</div>
               <div class="task-name">
                 <span *ngIf="task.assigned" class="assigned">&#10004; </span>
-                {{ task.name }}
+                <span id="t-name">{{ task.name }}</span>
               </div>
               <div class="task-description">{{ task.description }}</div>
             </a>

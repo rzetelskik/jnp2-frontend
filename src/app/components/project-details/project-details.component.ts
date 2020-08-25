@@ -282,20 +282,27 @@ export class ProjectDetailsComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } 
     else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+
       const taskEl = new DOMParser().parseFromString(event.item.element.nativeElement.innerHTML, 'text/html') as HTMLDocument;
       const taskId = parseInt(taskEl.getElementsByClassName('task-id')[0].textContent);
-      const taskName = taskEl.getElementsByClassName('task-name')[0].textContent;
+      const taskName = taskEl.getElementById('t-name').textContent;
       const taskDescription = taskEl.getElementsByClassName('task-description')[0].textContent;
 
       this.taskService.update(this.projectDetails.id, taskId, taskName, taskDescription, id).subscribe(
         data => {
-          transferArrayItem(event.previousContainer.data,
-            event.container.data,
-            event.previousIndex,
-            event.currentIndex);
+          
         },
         error => {
           this.errorMsg = error.error.error;
+
+          transferArrayItem(event.container.data,
+            event.previousContainer.data,
+            event.currentIndex,
+            event.previousIndex);
         }
       );
     }
