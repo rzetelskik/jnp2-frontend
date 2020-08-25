@@ -33,18 +33,11 @@ spec:
                 echo waiting for ${HOST_PROJECTS};
                 sleep 2;
               done;
-
-              until nslookup ${HOST_TASKS}; do
-                echo waiting for ${HOST_TASKS};
-                sleep 2;
-              done;
           envFrom:
             - configMapRef:
                 name: accounts-config
             - configMapRef:
                 name: projects-config
-            - configMapRef:
-                name: tasks-config
       containers:
         - name: frontend
           image: rzetelskik/jnp2-frontend:latest
@@ -56,3 +49,10 @@ spec:
             preStop:
               exec:
                 command: ["/usr/sbin/nginx","-s","quit"]
+          envFrom:
+            - configMapRef:
+                name: accounts-config
+            - configMapRef:
+                name: projects-config
+            - configMapRef:
+                name: rabbitmq-config
