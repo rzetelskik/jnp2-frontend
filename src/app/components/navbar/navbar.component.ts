@@ -22,14 +22,11 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     // this.authService.auth()?.subscribe(
-    //   resp => {
-    //     this.authService.authenticated = true;
-    //     this.username = this.authService.getUsername();
-    //   },
+    //   resp => { },
     //   error => {
-    //     console.log(error);
+    //     console.error(error);
     //     this.authService.logout();
-    //     this.authService.authenticated = false;
+    //     // window.location.replace('/');
     //   }
     // );
     if(this.authService.loggedIn()) {
@@ -48,6 +45,10 @@ export class NavbarComponent implements OnInit {
       },
       error => {
         this.loginError = error.error.error;
+
+        if(error.status == 502) {
+          this.loginError = 'Service unavailable';
+        }
       }
     );
   }
@@ -63,6 +64,10 @@ export class NavbarComponent implements OnInit {
       },
       error => {
         this.registerError = error.error.error;
+
+        if(error.status == 502) {
+          this.registerError = 'Service unavailable';
+        }
       }
     );
   }

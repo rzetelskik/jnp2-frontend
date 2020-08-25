@@ -50,12 +50,9 @@ export class AuthService {
       return null;
     }
 
-    const headers = new HttpHeaders({
-      'Content-Type' : 'application/json',
-      'Authorization': token
-    });
+    const httpOptions = this.generateHeaders();
 
-    return this.http.get<any>(`${this.serviceUrl}/accounts/authorize`, { headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.get<any>(`${this.serviceUrl}/authorize`, httpOptions);
   }
 
   setToken(token: string) {
