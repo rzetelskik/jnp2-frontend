@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +13,7 @@ import { ProjectsListComponent } from './components/projects-list/projects-list.
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guard/auth.guard';
+import { NewProjectComponent } from './components/new-project/new-project.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { AuthGuard } from './guard/auth.guard';
     ProjectsListComponent,
     ProjectDetailsComponent,
     HomeComponent,
+    NewProjectComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,6 +31,7 @@ import { AuthGuard } from './guard/auth.guard';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    DragDropModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]

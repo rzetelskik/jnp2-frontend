@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectHeader } from '../../models/project';
-import { AuthService } from '../../services/auth.service';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-projects-list',
@@ -10,22 +10,17 @@ import { AuthService } from '../../services/auth.service';
 export class ProjectsListComponent implements OnInit {
   projects: ProjectHeader[];
 
-  constructor(private auth: AuthService) { }
+  constructor(private projectsService: ProjectsService) { }
 
   ngOnInit(): void {
-    if(!this.auth.authenticated) {
-      console.log("!!!!!")
-    }
-
-    this.projects = [
-      {
-        id: 1,
-        name: 'Testowy'
+    this.projectsService.getProjects()?.subscribe(
+      data => {
+        console.log(data);
+        this.projects = data;
       },
-      {
-        id: 2,
-        name: 'Projekt'
+      error => {
+        console.error(error);
       }
-    ];
+    )
   }
 }

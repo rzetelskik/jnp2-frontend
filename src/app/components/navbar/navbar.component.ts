@@ -10,7 +10,6 @@ import { tap, catchError} from 'rxjs/operators'
   styleUrls: ['./navbar.component.scss']
 })
 
-//TODO erros while login/register
 export class NavbarComponent implements OnInit {
   username: string = null;
   loginModel: LoginModel = new LoginModel();
@@ -22,20 +21,20 @@ export class NavbarComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.authService.auth()?.subscribe(
-      resp => {
-        console.log(resp);
-        console.log(resp.headers.get('Authenticated'));
-        // this.authService.setUserId(resp.headers.get('Authenticated'))
-        this.authService.authenticated = true;
-        this.username = this.authService.getUsername();
-      },
-      error => {
-        console.log(error);
-        this.authService.logout();
-        this.authService.authenticated = false;
-      }
-    );
+    // this.authService.auth()?.subscribe(
+    //   resp => {
+    //     this.authService.authenticated = true;
+    //     this.username = this.authService.getUsername();
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     this.authService.logout();
+    //     this.authService.authenticated = false;
+    //   }
+    // );
+    if(this.authService.loggedIn()) {
+      this.username = this.authService.getUsername();
+    }
   }
 
   login(event: Event) {

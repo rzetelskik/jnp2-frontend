@@ -14,10 +14,18 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-  public authenticated: boolean = false;
   serviceUrl: string = environment.accountsUrl;
 
   constructor(private http: HttpClient) { }
+
+  generateHeaders() {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': this.getToken()
+      })
+    }
+  }
 
   login(model: LoginModel): Observable<any> {
     return this.http.post<any>(`${this.serviceUrl}/accounts/authenticate`, model, httpOptions);
@@ -37,7 +45,7 @@ export class AuthService {
   }
 
   auth(): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = this.getToken();
     if(!token) {
       return null;
     }
@@ -47,11 +55,15 @@ export class AuthService {
       'Authorization': token
     });
 
-    return this.http.get<any>(`${this.serviceUrl}/authorize`, { headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.get<any>(`${this.serviceUrl}/accounts/authorize`, { headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
   setToken(token: string) {
     localStorage.setItem('token', token);
+  }
+
+  getToken(): string {
+    return localStorage.getItem('token');
   }
 
   setUsername(username: string) {

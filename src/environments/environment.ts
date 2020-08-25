@@ -4,9 +4,8 @@
 
 export const environment = {
   production: false,
-  accountsUrl: 'http://localhost:3001',
-  tasksUrl: '',
-  projectsUrl: ''
+  accountsUrl:  'http://localhost:80',
+  projectsUrl:  'http://localhost:80'
 };
 
 /*

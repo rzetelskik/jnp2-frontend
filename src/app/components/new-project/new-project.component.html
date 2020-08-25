@@ -1,0 +1,10 @@
+<h2>Create new project</h2>
+
+<form (ngSubmit)="create($event)">
+  <div class="form-group">
+    <label for="name">Project name</label>
+    <input type="text" class="form-control" id="name" name="name" [(ngModel)]="projectName">
+
+    <button type="submit" class="btn btn-success">Create project</button>
+  </div>
+</form>

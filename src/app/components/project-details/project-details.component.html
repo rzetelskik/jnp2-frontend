@@ -1,1 +1,157 @@
-<p>DETAILS! </p>
+<div class="root">
+  <div class="board">
+    <div class="board-bar">
+      <p class="board-name" *ngIf="projectDetails">{{ projectDetails.projectName }}</p>
+    </div>
+
+    <div class="board-body">
+
+      <div class="management">
+        <div class="management-buttons">
+          <a class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addList" aria-expanded="false"
+            aria-controls="addList">
+            Add list
+          </a>
+          <a class="btn btn-success" id="addButton" type="button" data-toggle="collapse" data-target="#addForm"
+            aria-expanded="false" aria-controls="addForm">
+            Add user
+          </a>
+          <a class="btn btn-danger" id="removeButton" type="button" data-toggle="collapse" data-target="#removeForm"
+            aria-expanded="false" aria-controls="removeForm">
+            Remove user
+          </a>
+        </div>
+
+        <div class="collapse" id="addList">
+          <form (ngSubmit)="addList($event)">
+            <div class="form-group">
+              <label for="listName">List name</label>
+              <input type="text" class="form-control input-field" id="listName" name="listName" [(ngModel)]="listName"
+                required>
+
+              <button type="submit" class="btn btn-success">Create list</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="collapse" id="addForm">
+          <form (ngSubmit)="addUser($event)">
+            <div class="form-group">
+              <label for="addName">Add user</label>
+              <input type="text" class="form-control input-field" id="addName" name="addName" [(ngModel)]="addName"
+                required>
+
+              <button type="submit" class="btn btn-success">Add user</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="collapse" id="removeForm">
+          <form (ngSubmit)="removeUser($event)">
+            <div class="form-group">
+              <label for="removeName">Remove user</label>
+              <input type="text" class="form-control input-field" id="removeName" name="removeName"
+                [(ngModel)]="removeName" required>
+
+              <button type="submit" class="btn btn-success">Remove user</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="board-columns" cdkDropListGroup>
+        <div class="board-column" *ngFor="let list of lists">
+          <div class="column-name">
+            {{ list.name }}
+            <button (click)="removeList(list.id)" class="min-button">&times;</button>
+            <button (click)="selectList(list.id)" class="min-button" data-toggle="modal"
+              data-target="#taskModal">&#43;</button>
+          </div>
+
+          <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="list.tasks"
+            (cdkDropListDropped)="drop($event, list.id)">
+            <a class="task" *ngFor="let task of list.tasks" cdkDrag (click)="showDetails(task.id)" data-toggle="modal" data-target="#detailsModal">
+              <div class="task-id">{{ task.id }}</div>
+              <div class="task-name">{{ task.name }}</div>
+              <div class="task-description">{{ task.description }}</div>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Create task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form (ngSubmit)="createTask($event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="taskName">Task name</label>
+            <input type="text" class="form-control name-field" id="taskName" name="taskName" [(ngModel)]="taskName"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="taskDes">Description</label>
+            <textarea class="form-control" id="taskDes" name="taskDes" [(ngModel)]="taskDes" required> </textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Create task</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">{{ details.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="datails">
+          <div class="form-group">
+            <label for="detailsName">Task name</label>
+            <input type="text" class="form-control name-field" id="detailsName" name="detailsName"[(ngModel)]="details.name" > 
+          </div>
+          <div class="form-group">
+            <label for="detailsDes">Task description</label>
+            <textarea class="form-control" id="detailsDes" name="detailsDes"[(ngModel)]="details.description" > </textarea>
+          </div>
+          <div class="form-group">
+            <label for="detailsBy" class="text-bold">Created by</label>
+            <input readonly class="form-control-plaintext" id="detailsBy" name="detailsBy"[(ngModel)]="details.created_by" >
+          </div>
+          <div class="form-group">
+            <label for="detailsAt" class="text-bold">Created at</label>
+            <input readonly class="form-control-plaintext" id="detailsAt" name="detailsAt"[(ngModel)]="details.created_at" >
+          </div>
+          <div class="form-group">
+            <label for="detailsUpdated" class="text-bold">Last modified at</label>
+            <input readonly class="form-control-plaintext" id="detailsUpdated" name="detailsUpdated"[(ngModel)]="details.updated_at" >
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" (click)="saveChanges()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

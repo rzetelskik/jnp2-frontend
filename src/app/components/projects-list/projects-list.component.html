@@ -1,4 +1,9 @@
-<h2>Your projects</h2>
+<h2>Your projectstyty</h2>
+<a class="nav-link" routerLink="/project/new">
+    <button class="btn btn-primary">
+        Create project
+    </button>
+</a>
 <div id="list">
     <app-project-card *ngFor="let project of projects" [project]="project"></app-project-card>
 </div>

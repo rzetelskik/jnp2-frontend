@@ -12,6 +12,9 @@
       <li class="nav-item active">
         <a class="nav-link" routerLink="/list">Your projects</a>
       </li>
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/project/new">Create project</a>
+      </li>
     </ul>
     <div class="my-2 my-lg-0">
       <div *ngIf="!username; else elseBlock">
@@ -75,8 +78,8 @@
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" [(ngModel)]="registrationModel.password" name="password">
+            <label for="passwordRegister">Password</label>
+            <input type="password" class="form-control" id="passwordRegister" [(ngModel)]="registrationModel.password" name="passwordRegister">
           </div>
 
           <div class="form-group">
