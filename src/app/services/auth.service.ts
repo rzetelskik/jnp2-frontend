@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginModel, RegistrationModel } from '../models/user'
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment'
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,8 +13,6 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-  serviceUrl: string = environment.accountsUrl;
-
   constructor(private http: HttpClient) { }
 
   generateHeaders() {
@@ -28,7 +25,7 @@ export class AuthService {
   }
 
   login(model: LoginModel): Observable<any> {
-    return this.http.post<any>(`${this.serviceUrl}/accounts/authenticate`, model, httpOptions);
+    return this.http.post<any>(`/accounts/authenticate`, model, httpOptions);
   }
 
   logout() {
@@ -41,7 +38,7 @@ export class AuthService {
   }
 
   register(model: RegistrationModel): Observable<any> {
-    return this.http.post<any>(`${this.serviceUrl}/accounts/register`, model, httpOptions);
+    return this.http.post<any>(`/accounts/register`, model, httpOptions);
   }
 
   auth(): Observable<any> {
@@ -52,7 +49,7 @@ export class AuthService {
 
     const httpOptions = this.generateHeaders();
 
-    return this.http.get<any>(`${this.serviceUrl}/authorize`, httpOptions);
+    return this.http.get<any>(`/authorize`, httpOptions);
   }
 
   setToken(token: string) {

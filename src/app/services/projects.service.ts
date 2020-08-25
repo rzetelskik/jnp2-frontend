@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { AuthService } from './auth.service'
 import { Observable } from 'rxjs'
@@ -8,14 +7,12 @@ import { Observable } from 'rxjs'
   providedIn: 'root'
 })
 export class ProjectsService {
-  serviceUrl: string = environment.projectsUrl;
-
   constructor(private http: HttpClient, private auth: AuthService) { }
 
   getProjects(): Observable<any> {
     const httpOptions = this.auth.generateHeaders();
 
-    return this.http.get<any>(`${this.serviceUrl}/projects`, httpOptions);
+    return this.http.get<any>(`/projects`, httpOptions);
   }
 
   createProject(projectName: string): Observable<any> {
@@ -25,7 +22,7 @@ export class ProjectsService {
       name: projectName
     };
 
-    return this.http.post<any>(`${this.serviceUrl}/projects`, model, httpOptions);
+    return this.http.post<any>(`/projects`, model, httpOptions);
   }
 
   assign(projectId: number, user: string): Observable<any> {
@@ -35,7 +32,7 @@ export class ProjectsService {
       user
     };
 
-    return this.http.put<any>(`${this.serviceUrl}/projects/${projectId}/assign`, model, httpOptions);
+    return this.http.put<any>(`/projects/${projectId}/assign`, model, httpOptions);
   }
 
   unassign(projectId: number, user: string): Observable<any> {
@@ -45,12 +42,12 @@ export class ProjectsService {
       user
     };
 
-    return this.http.put<any>(`${this.serviceUrl}/projects/${projectId}/unassign`, model, httpOptions);
+    return this.http.put<any>(`/projects/${projectId}/unassign`, model, httpOptions);
   }
 
   details(projectId: number): Observable<any> {
     const httpOptions = this.auth.generateHeaders();
 
-    return this.http.get<any>(`${this.serviceUrl}/projects/${projectId}/`, httpOptions);
+    return this.http.get<any>(`/projects/${projectId}/`, httpOptions);
   }
 }
