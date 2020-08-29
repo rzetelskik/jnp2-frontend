@@ -11,7 +11,7 @@ export class SocketService {
 
   connect(username: string) {
     const config: SocketIoConfig = {
-      url: 'http://localhost:3003/notify'
+      url: 'http://localhost:80/notify'
       // url: window.location.host + '/notify'
     };
     this.socket = new Socket(config);
