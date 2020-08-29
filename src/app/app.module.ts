@@ -14,6 +14,7 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guard/auth.guard';
 import { NewProjectComponent } from './components/new-project/new-project.component';
+import { SocketIoModule } from 'ngx-socket-io';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { NewProjectComponent } from './components/new-project/new-project.compon
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    DragDropModule
+    DragDropModule,
+    SocketIoModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
