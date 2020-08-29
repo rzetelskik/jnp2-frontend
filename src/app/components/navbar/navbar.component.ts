@@ -33,7 +33,7 @@ export class NavbarComponent implements OnInit {
     // );
     if(this.authService.loggedIn()) {
       this.username = this.authService.getUsername();
-      this.socketService.connect(this.username);
+      this.socketService.connect(this.authService.getToken(), this.username);
     }
   }
 

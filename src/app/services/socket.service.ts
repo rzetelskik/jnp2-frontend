@@ -9,10 +9,14 @@ export class SocketService {
 
   constructor() { }
 
-  connect(username: string) {
+  connect(token: string, username: string) {
     const config: SocketIoConfig = {
-      url: 'http://localhost:3003/notify'
-      // url: window.location.host + '/notify'
+      url: '/notify',
+      options: {
+        extraHeaders: {
+          Authorization: token
+        }
+      }
     };
     this.socket = new Socket(config);
 
