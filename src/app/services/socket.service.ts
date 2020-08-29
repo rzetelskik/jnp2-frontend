@@ -5,7 +5,7 @@ import { Socket, SocketIoConfig } from 'ngx-socket-io'
   providedIn: 'root'
 })
 export class SocketService {
-  private socket: Socket = null;
+  private socket = null;
 
   constructor() { }
 
@@ -13,11 +13,16 @@ export class SocketService {
     const config: SocketIoConfig = {
       url: '/notify',
       options: {
-        extraHeaders: {
-          Authorization: token
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              'Authorization': token
+            }
+          }
         }
       }
     };
+
     this.socket = new Socket(config);
 
     this.socket.emit('username', username);
