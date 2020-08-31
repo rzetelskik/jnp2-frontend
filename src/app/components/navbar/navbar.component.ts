@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginModel, RegistrationModel } from '../../models/user'
-import { consoleTestResultHandler } from 'tslint/lib/test';
-import { tap, catchError} from 'rxjs/operators'
-import { SocketService } from '../../services/socket.service'
-import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-navbar',
@@ -20,7 +16,7 @@ export class NavbarComponent implements OnInit {
   loginError: string = null;
   registerError: string = null;
 
-  constructor(private authService: AuthService, private socketService: SocketService) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     // this.authService.auth()?.subscribe(
@@ -33,7 +29,6 @@ export class NavbarComponent implements OnInit {
     // );
     if(this.authService.loggedIn()) {
       this.username = this.authService.getUsername();
-      this.socketService.connect(this.authService.getToken(), this.username);
     }
   }
 

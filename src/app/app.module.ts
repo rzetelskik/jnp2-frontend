@@ -15,6 +15,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guard/auth.guard';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { SocketIoModule } from 'ngx-socket-io';
+import { NotifyToastComponent } from './components/notify-toast/notify-toast.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { SocketIoModule } from 'ngx-socket-io';
     ProjectDetailsComponent,
     HomeComponent,
     NewProjectComponent,
+    NotifyToastComponent,
   ],
   imports: [
     BrowserModule,
