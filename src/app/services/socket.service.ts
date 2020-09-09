@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket, SocketIoConfig } from 'ngx-socket-io'
-import { NotifyToastComponent } from '../components/notify-toast/notify-toast.component' 
+import { NotifyToastComponent } from '../components/notify-toast/notify-toast.component'
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class SocketService {
 
   connect(token: string, username: string, component: NotifyToastComponent) {
     const config: SocketIoConfig = {
-      url: 'http://localhost:3000/notify',
+      url: '/notify',
       options: {
         transportOptions: {
           polling: {
