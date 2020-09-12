@@ -6,6 +6,7 @@ import { List } from '../../models/list'
 import { DatePipe } from '@angular/common'
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'
 import { Task, TaskUser } from '../../models/task';
+import { ActivatedRoute } from '@angular/router'
 
 interface ProjectUser {
   user: string;
@@ -50,67 +51,76 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
   lists: List[] = [];
   errorMsg: string = null;
 
-  constructor(private projectService: ProjectsService, private statusService: StatusService, private taskService: TasksService) { }
+  taskID: number = 0;
+
+  constructor(private route: ActivatedRoute, private projectService: ProjectsService, private statusService: StatusService, private taskService: TasksService) { }
 
   ngOnInit(): void {
-    const url = window.location.pathname.split('/');
-    const id = Number(url[2]);
-
-    this.projectService.details(id).subscribe(
-      data => {
-        const assignees: ProjectUser[] = data.assignees.map(mapToUser);
-
-        this.projectDetails = {
-          id: data.id,
-          projectName: data.name,
-          created: new Date(data.created_at),
-          updated: new Date(data.updated_at),
-          assignees
-        }
-
-        this.statusService.getStatuses(this.projectDetails.id).subscribe(
-          data => {
-            for(let l of data) {
-              this.lists.push(new List(l.id, l.name, []));
-            }
-            this.lists.sort((a, b) => a.id - b.id);
-
-            this.taskService.getAll(this.projectDetails.id).subscribe(
-              data => {
-                for(let t of data) {
-                    this.addTask(t);
-                }
-
-                this.checkAssigned();
-              },
-              error => {
-                this.errorMsg = error.error.error;
-              }
-            )
-          },
-          error => {
-            this.errorMsg = error.error.error;
-          }
-        );
-      },
-      error => {
-        this.errorMsg = error.error.error;
+    this.route.params.subscribe(params => {
+      const id = +params['id'];
+      
+      if(params['task_id'] != null) {
+        this.taskID = +params['task_id'];
       }
-    );
+      else {
+        this.taskID = -1;
+      }
+
+      this.projectService.details(id).subscribe(
+        data => {
+          const assignees: ProjectUser[] = data.assignees.map(mapToUser);
+  
+          this.projectDetails = {
+            id: data.id,
+            projectName: data.name,
+            created: new Date(data.created_at),
+            updated: new Date(data.updated_at),
+            assignees
+          }
+  
+          this.statusService.getStatuses(this.projectDetails.id).subscribe(
+            data => {
+              for(let l of data) {
+                this.lists.push(new List(l.id, l.name, []));
+              }
+              this.lists.sort((a, b) => a.id - b.id);
+  
+              this.taskService.getAll(this.projectDetails.id).subscribe(
+                data => {
+                  for(let t of data) {
+                      this.addTask(t);
+                  }
+  
+                  this.checkAssigned();
+                },
+                error => {
+                  this.errorMsg = error.error.error;
+                }
+              )
+            },
+            error => {
+              this.errorMsg = error.error.error;
+            }
+          );
+        },
+        error => {
+          this.errorMsg = error.error.error;
+        }
+      );
+    })
+    // const url = window.location.pathname.split('/');
+    // const id = Number(url[2]);
+
   }
 
   done: boolean = false;
   ngAfterViewChecked(): void {
-    if(!this.done) {
-      const url = window.location.pathname.split('/');
-      
-      if(url.length < 5) {
+    if(!this.done) {     
+      if(this.taskID < 0) {
         this.done = true;
         return;
       }
-
-      const taskID = new Number(url[4]).valueOf();
-      const el = document.getElementById(`task-card-${taskID}`);
+      const el = document.getElementById(`task-card-${this.taskID}`);
 
       if(el) {
         el.click()
