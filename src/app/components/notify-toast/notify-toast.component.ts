@@ -24,14 +24,22 @@ export class NotifyToastComponent implements OnInit {
 
   public addNotification(msg) {
     const msgObj = JSON.parse(msg);
+    console.log(msgObj);
 
     const notify = new Notify();
-    notify.id = this.counter;
-    notify.url = `/project/${msgObj.payload.id}`;
-    notify.description = `You have been assigned to '${msgObj.payload.name}'`;
+
+    if(msgObj.resource == 'project') {
+      notify.id = this.counter;
+      notify.url = `/project/${msgObj.payload.id}`;
+      notify.description = `You have been assigned to project '${msgObj.payload.name}'`;
+    }
+    else if(msgObj.resource == 'task') {
+      notify.id = this.counter;
+      notify.url = `/project/${msgObj.payload.project_id}/task/${msgObj.payload.id}`;
+      notify.description = `You have been assigned to task '${msgObj.payload.name}'`;
+    }
 
     this.counter++;
-
     this.notifies.push(notify);
   }
 

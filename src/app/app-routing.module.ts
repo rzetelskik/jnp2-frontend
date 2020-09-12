@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'list', component: ProjectsListComponent, canActivate: [AuthGuard] },
   { path: 'project/new', component: NewProjectComponent, canActivate: [AuthGuard] },
   { path: 'project/:id', component: ProjectDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'project/:id/task/:task_id', component: ProjectDetailsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

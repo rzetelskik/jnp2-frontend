@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ProjectsService } from '../../services/projects.service'
 import { StatusService } from '../../services/status.service'
 import { TasksService } from '../../services/tasks.service'
@@ -33,7 +33,7 @@ interface ProjectDetails {
   styleUrls: ['./project-details.component.scss']
 })
 
-export class ProjectDetailsComponent implements OnInit {
+export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
   projectDetails: ProjectDetails;
   details: Task = new Task(0, '', '');
   taskUser: string;
@@ -53,8 +53,8 @@ export class ProjectDetailsComponent implements OnInit {
   constructor(private projectService: ProjectsService, private statusService: StatusService, private taskService: TasksService) { }
 
   ngOnInit(): void {
-    const url = window.location.href.split('/');
-    const id = Number(url[url.length - 1]);
+    const url = window.location.pathname.split('/');
+    const id = Number(url[2]);
 
     this.projectService.details(id).subscribe(
       data => {
@@ -97,6 +97,26 @@ export class ProjectDetailsComponent implements OnInit {
         this.errorMsg = error.error.error;
       }
     );
+  }
+
+  done: boolean = false;
+  ngAfterViewChecked(): void {
+    if(!this.done) {
+      const url = window.location.pathname.split('/');
+      
+      if(url.length < 5) {
+        this.done = true;
+        return;
+      }
+
+      const taskID = new Number(url[4]).valueOf();
+      const el = document.getElementById(`task-card-${taskID}`);
+
+      if(el) {
+        el.click()
+        this.done = true;
+      }
+    }
   }
 
   checkAssigned() {
@@ -244,7 +264,6 @@ export class ProjectDetailsComponent implements OnInit {
           }
           return us;
         });
-        console.log(this.details);
       },
       error => {
         this.errorMsg = error.error.error;
@@ -253,7 +272,6 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   saveChanges() {
-    console.log(this.details.selectedUsers);
     this.taskService.update(this.projectDetails.id, this.details.id,
       this.details.name, this.details.description, this.details.status).subscribe(
         data => {

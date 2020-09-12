@@ -82,7 +82,7 @@
 
           <div class="tasks-container" cdkDropList #todoList="cdkDropList" [cdkDropListData]="list.tasks"
             (cdkDropListDropped)="drop($event, list.id)">
-            <a class="task" *ngFor="let task of list.tasks" cdkDrag (click)="showDetails(task.id)" data-toggle="modal" data-target="#detailsModal">
+            <a id="{{'task-card-' + task.id}}" class="task" *ngFor="let task of list.tasks" cdkDrag (click)="showDetails(task.id)" data-toggle="modal" data-target="#detailsModal">
               <div class="task-id">{{ task.id }}</div>
               <div class="task-name">
                 <span *ngIf="task.assigned" class="assigned">&#10004; </span>
