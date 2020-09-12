@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ProjectsService } from '../../services/projects.service'
 import { StatusService } from '../../services/status.service'
 import { TasksService } from '../../services/tasks.service'
+import { AuthService } from '../../services/auth.service'
 import { List } from '../../models/list'
 import { DatePipe } from '@angular/common'
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop'
@@ -39,6 +40,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
   details: Task = new Task(0, '', '');
   taskUser: string;
   taskError: string = null;
+  isOwner: boolean = false;
   
   listName: string;
   addName: string;
@@ -53,7 +55,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
 
   taskID: number = 0;
 
-  constructor(private route: ActivatedRoute, private projectService: ProjectsService, private statusService: StatusService, private taskService: TasksService) { }
+  constructor(private route: ActivatedRoute, private projectService: ProjectsService, private statusService: StatusService, private taskService: TasksService, private auth: AuthService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -77,6 +79,9 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
             updated: new Date(data.updated_at),
             assignees
           }
+
+          const owners = this.projectDetails.assignees.filter(x => x.owner).filter(x => x.user === this.auth.getUsername());
+          this.isOwner = owners.length > 0;
   
           this.statusService.getStatuses(this.projectDetails.id).subscribe(
             data => {
@@ -107,10 +112,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
           this.errorMsg = error.error.error;
         }
       );
-    })
-    // const url = window.location.pathname.split('/');
-    // const id = Number(url[2]);
-
+    });
   }
 
   done: boolean = false;
@@ -165,6 +167,17 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
     this.statusService.deleteStatus(this.projectDetails.id, id).subscribe(
       data => {
         window.location.reload();
+      },
+      error => {
+        this.errorMsg = error.error.error;
+      }
+    );
+  }
+
+  deleteProject() {
+    this.projectService.deleteProject(this.projectDetails.id).subscribe(
+      data => {
+        window.location.replace('/list');
       },
       error => {
         this.errorMsg = error.error.error;

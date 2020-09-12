@@ -50,4 +50,10 @@ export class ProjectsService {
 
     return this.http.get<any>(`/projects/${projectId}/`, httpOptions);
   }
+
+  deleteProject(projectId: number): Observable<any> {
+    const httpOptions = this.auth.generateHeaders();
+
+    return this.http.delete<any>(`/projects/${projectId}/`, httpOptions);
+  }
 }

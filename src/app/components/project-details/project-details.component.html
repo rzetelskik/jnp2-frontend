@@ -23,6 +23,7 @@
             aria-expanded="false" aria-controls="removeForm">
             Remove user
           </a>
+          <button class="btn btn-outline-danger" type="button" (click)="deleteProject()" *ngIf="isOwner">Delete project</button>
           <a class="dropdown" *ngIf="projectDetails">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="assigneesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assignees</button>
             <div class="dropdown-menu" aria-labelledby="assigneesButton">
