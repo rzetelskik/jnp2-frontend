@@ -24,7 +24,6 @@ export class NotifyToastComponent implements OnInit {
 
   public addNotification(msg) {
     const msgObj = JSON.parse(msg);
-    console.log(msgObj);
 
     const notify = new Notify();
 
