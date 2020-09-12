@@ -32,7 +32,7 @@
   height: 100%;
 
   .board-bar {
-    background: rgb(gray, 0.5);
+    background: rgb(243, 150, 154, 0.7);
     padding: 8px 15px;
 
     .board-name {
@@ -78,6 +78,7 @@
           font-family: 'Lato', sans-serif;
           text-transform: uppercase;
           margin-bottom: 20px;
+          color: white;
         }
       }
     }
