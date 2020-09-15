@@ -204,6 +204,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
               updated: new Date(data.updated_at),
               assignees
             }
+            this.errorMsg = null;
           },
           error => {
             this.errorMsg = error.error.error;
@@ -235,6 +236,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
               updated: new Date(data.updated_at),
               assignees
             }
+            this.errorMsg = null;
           },
           error => {
             this.errorMsg = error.error.error;
@@ -287,6 +289,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
           }
           return us;
         });
+        this.errorMsg = null;
       },
       error => {
         this.errorMsg = error.error.error;
@@ -304,6 +307,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
               this.showDetails(this.details.id);
               this.taskError = null;
               this.checkAssigned();
+              this.errorMsg = null;
             },
             error => {
               document.getElementById('closeButton').click();
@@ -335,7 +339,7 @@ export class ProjectDetailsComponent implements OnInit, AfterViewChecked {
 
       this.taskService.update(this.projectDetails.id, taskId, taskName, taskDescription, id).subscribe(
         data => {
-          
+          this.errorMsg = null;
         },
         error => {
           this.errorMsg = error.error.error;
